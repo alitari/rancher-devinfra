@@ -1,0 +1,15 @@
+nexus-data:
+  image: sonatype/nexus
+  command: echo "data-only container for Nexus"
+  labels: 
+    io.rancher.container.start_once: true
+  
+nexus:
+  image: sonatype/nexus
+  ports:
+  - 8081:8081
+  volumes_from:
+  - nexus-data
+  labels:
+    io.rancher.scheduler.affinity:host_label: usage=development
+    io.rancher.sidekicks: nexus-data

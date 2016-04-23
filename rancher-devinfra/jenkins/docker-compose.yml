@@ -1,0 +1,24 @@
+jenkins-data:
+  image: jenkins
+  volumes:
+  - /var/jenkins_home
+  command: echo "data-only container for jenkins"
+  labels: 
+    io.rancher.container.start_once: true  
+jenkins:
+  image: jenkins
+  ports:
+  - 6080:8080
+  - 50000:50000
+  environment:
+  - DOCKERREGISTRY_PORT=${DOCKERREGISTRY_PORT}
+  - DOCKER_HOST_IP_INFRA=${DOCKER_HOST_IP_INFRA}
+  - DOCKER_HOST_PORT_INFRA=2376
+  - DOCKER_CERT_PATH_INFRA=/.docker/infra
+  volumes_from:
+  - jenkins-data
+  volumes:
+  - /home/docker-user/.docker/infranew:/.docker/infra
+  labels:
+    io.rancher.scheduler.affinity:host_label: usage=development
+    io.rancher.sidekicks: jenkins-data  

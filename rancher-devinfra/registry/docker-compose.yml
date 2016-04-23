@@ -1,0 +1,25 @@
+registry-data:
+  image: busybox
+  volumes:
+  - /var/lib/docker/registry
+  command: echo "data-only container for registry"
+  labels: 
+    io.rancher.container.start_once: true
+
+registry:
+  image: registry:2
+  ports:
+  - ${DOCKERREGISTRY_PORT}:5000
+  volumes_from:
+  - registry-data
+  labels:
+    io.rancher.scheduler.affinity:host_label: usage=development
+    io.rancher.sidekicks: registry-data
+registry-frontend:
+  image: konradkleine/docker-registry-frontend:v2
+  ports:
+  - 7080:80
+  environment:  
+  - ENV_DOCKER_REGISTRY_HOST=${DOCKER_HOST_IP_INFRA}
+  - ENV_DOCKER_REGISTRY_PORT=${DOCKERREGISTRY_PORT}
+  - ENV_MODE_BROWSE_ONLY=false
