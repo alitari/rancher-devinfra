@@ -27,8 +27,13 @@ export DOCKER_HOST_PORT_INFRA=2376
 
 #rancher-compose -p nexus up
 
-# for jenkins to use docker infra
+# jenkins to use docker infra
 # copy docker-machine certs to host using ssh-copy
 # docker-machine ssh infranew mkdir /home/docker-user/.docker
 # docker-machine scp -r ~/.docker/machine/machines/infranew infranew:/home/docker-user/.docker
+
+# reverse proxy config
+# docker-machine ssh infranew mkdir /etc/nginx/
+# docker-machine ssh infranew sudo chmod a+w /etc/nginx/
+# docker-machine scp ./nginx/nginx.conf infranew:/etc/nginx/nginx.conf 
 
