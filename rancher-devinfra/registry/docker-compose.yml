@@ -9,7 +9,7 @@ registry-data:
 registry:
   image: registry:2
   ports:
-  - ${DOCKERREGISTRY_PORT}:5000
+  - 5000:5000
   volumes_from:
   - registry-data
   labels:
@@ -20,6 +20,10 @@ registry-frontend:
   ports:
   - 7080:80
   environment:  
-  - ENV_DOCKER_REGISTRY_HOST=${DOCKER_HOST_IP_INFRA}
-  - ENV_DOCKER_REGISTRY_PORT=${DOCKERREGISTRY_PORT}
+  - ENV_DOCKER_REGISTRY_HOST=registry
+  - ENV_DOCKER_REGISTRY_PORT=5000
   - ENV_MODE_BROWSE_ONLY=false
+  links:
+  - registry:registry
+  labels:
+    io.rancher.scheduler.affinity:host_label: usage=development
